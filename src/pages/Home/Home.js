@@ -10,21 +10,29 @@ const cx = classNames.bind(styles);
 
 function Home() {
     const [video, setVideo] = useState([])
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         videoServices.getVideosList({ type: 'for-you', page: 1 })
             .then((data) => {
                 setVideo(data);
             })
             .catch((err) => { console.log(err); })
+            .finally(() => { setLoading(false) })
 
     }, [])
 
     return (
         <div className={cx('wrapper')}>
-            {video.map((video) => (
-                <HomeVideo key={video.id} data={video} />
-            ))}
+            <>
+                {loading ? <div>Loading</div> :
+                    <>
+                        {video && video.map((video) => (
+                            <HomeVideo key={video.id} data={video} />
+                        ))}
+                    </>
 
+                }
+            </>
 
         </div>
     );
